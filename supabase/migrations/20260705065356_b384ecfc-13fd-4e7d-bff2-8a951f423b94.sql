@@ -1,2 +1,0 @@
-
-ALTER VIEW public.stock_balances SET (security_invoker = true);
