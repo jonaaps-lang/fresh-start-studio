@@ -24,6 +24,8 @@ export const SETTINGS_CATEGORIES = [
   "comercial",
   "producao",
   "financeiro",
+  "compras",
+  "estoque",
   "documentos",
   "interface",
   "usuarios",
@@ -315,6 +317,53 @@ export const sistemaSchema = z.object({
 });
 
 // -----------------------------------------------------------------------------
+// COMPRAS
+// -----------------------------------------------------------------------------
+export interface ComprasSettings {
+  utiliza_compras: boolean;
+  exige_aprovacao_compra: boolean;
+  gerar_cp_automaticamente: boolean;
+  parcelamento_padrao: number;
+  vencimento_dias_padrao: number;
+}
+export const DEFAULT_COMPRAS: ComprasSettings = {
+  utiliza_compras: true,
+  exige_aprovacao_compra: false,
+  gerar_cp_automaticamente: true,
+  parcelamento_padrao: 1,
+  vencimento_dias_padrao: 30,
+};
+export const comprasSchema = z.object({
+  utiliza_compras: z.boolean(),
+  exige_aprovacao_compra: z.boolean(),
+  gerar_cp_automaticamente: z.boolean(),
+  parcelamento_padrao: z.number().int().min(1).max(48),
+  vencimento_dias_padrao: z.number().int().min(0).max(365),
+});
+
+// -----------------------------------------------------------------------------
+// ESTOQUE
+// -----------------------------------------------------------------------------
+export interface EstoqueSettings {
+  utiliza_estoque: boolean;
+  estoque_obrigatorio: boolean;
+  permitir_estoque_negativo: boolean;
+  alerta_estoque_minimo: boolean;
+}
+export const DEFAULT_ESTOQUE: EstoqueSettings = {
+  utiliza_estoque: false,
+  estoque_obrigatorio: false,
+  permitir_estoque_negativo: true,
+  alerta_estoque_minimo: true,
+};
+export const estoqueSchema = z.object({
+  utiliza_estoque: z.boolean(),
+  estoque_obrigatorio: z.boolean(),
+  permitir_estoque_negativo: z.boolean(),
+  alerta_estoque_minimo: z.boolean(),
+});
+
+// -----------------------------------------------------------------------------
 // Registro central por categoria
 // -----------------------------------------------------------------------------
 export type SettingsShape = {
@@ -323,6 +372,8 @@ export type SettingsShape = {
   comercial: ComercialSettings;
   producao: ProducaoSettings;
   financeiro: FinanceiroSettings;
+  compras: ComprasSettings;
+  estoque: EstoqueSettings;
   documentos: DocumentosSettings;
   interface: InterfaceSettings;
   usuarios: UsuariosSettings;
@@ -335,6 +386,8 @@ export const CATEGORY_DEFAULTS: { [K in SettingsCategory]: SettingsShape[K] } = 
   comercial: DEFAULT_COMERCIAL,
   producao: DEFAULT_PRODUCAO,
   financeiro: DEFAULT_FINANCEIRO,
+  compras: DEFAULT_COMPRAS,
+  estoque: DEFAULT_ESTOQUE,
   documentos: DEFAULT_DOCUMENTOS,
   interface: DEFAULT_INTERFACE,
   usuarios: DEFAULT_USUARIOS,
@@ -347,6 +400,8 @@ export const CATEGORY_SCHEMAS: { [K in SettingsCategory]: z.ZodType<SettingsShap
   comercial: comercialSchema as unknown as z.ZodType<ComercialSettings>,
   producao: producaoSchema as unknown as z.ZodType<ProducaoSettings>,
   financeiro: financeiroSchema as unknown as z.ZodType<FinanceiroSettings>,
+  compras: comprasSchema as unknown as z.ZodType<ComprasSettings>,
+  estoque: estoqueSchema as unknown as z.ZodType<EstoqueSettings>,
   documentos: documentosSchema as unknown as z.ZodType<DocumentosSettings>,
   interface: interfaceSchema as unknown as z.ZodType<InterfaceSettings>,
   usuarios: usuariosSchema as unknown as z.ZodType<UsuariosSettings>,
@@ -355,6 +410,7 @@ export const CATEGORY_SCHEMAS: { [K in SettingsCategory]: z.ZodType<SettingsShap
 
 // Categorias que persistem em app_settings (empresa mora em company_settings por compat).
 export const APP_SETTINGS_CATEGORIES: readonly SettingsCategory[] = [
-  "operacao", "comercial", "producao", "financeiro",
+  "operacao", "comercial", "producao", "financeiro", "compras", "estoque",
   "documentos", "interface", "usuarios", "sistema",
 ] as const;
+

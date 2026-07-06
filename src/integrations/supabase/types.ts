@@ -1022,6 +1022,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "production_order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "stock_balances"
+            referencedColumns: ["product_id"]
+          },
+          {
             foreignKeyName: "production_order_items_production_order_id_fkey"
             columns: ["production_order_id"]
             isOneToOne: false
@@ -1288,6 +1295,166 @@ export type Database = {
         }
         Relationships: []
       }
+      purchase_order_items: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          desconto: number
+          descricao: string
+          empresa_id: string
+          id: string
+          ordem: number
+          preco_unitario: number
+          product_id: string | null
+          purchase_order_id: string
+          quantidade: number
+          total: number
+          unidade: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          desconto?: number
+          descricao: string
+          empresa_id: string
+          id?: string
+          ordem?: number
+          preco_unitario?: number
+          product_id?: string | null
+          purchase_order_id: string
+          quantidade?: number
+          total?: number
+          unidade?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          desconto?: number
+          descricao?: string
+          empresa_id?: string
+          id?: string
+          ordem?: number
+          preco_unitario?: number
+          product_id?: string | null
+          purchase_order_id?: string
+          quantidade?: number
+          total?: number
+          unidade?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "purchase_order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchase_order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "stock_balances"
+            referencedColumns: ["product_id"]
+          },
+          {
+            foreignKeyName: "purchase_order_items_purchase_order_id_fkey"
+            columns: ["purchase_order_id"]
+            isOneToOne: false
+            referencedRelation: "purchase_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      purchase_orders: {
+        Row: {
+          acrescimo: number
+          condicoes_pagamento: string | null
+          created_at: string
+          created_by: string | null
+          data_emissao: string
+          data_prevista: string | null
+          data_recebimento: string | null
+          deleted_at: string | null
+          deleted_by: string | null
+          desconto: number
+          empresa_id: string
+          finance_title_id: string | null
+          id: string
+          numero: string
+          observacoes: string | null
+          subtotal: number
+          supplier_id: string | null
+          total: number
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          acrescimo?: number
+          condicoes_pagamento?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_emissao?: string
+          data_prevista?: string | null
+          data_recebimento?: string | null
+          deleted_at?: string | null
+          deleted_by?: string | null
+          desconto?: number
+          empresa_id: string
+          finance_title_id?: string | null
+          id?: string
+          numero: string
+          observacoes?: string | null
+          subtotal?: number
+          supplier_id?: string | null
+          total?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          acrescimo?: number
+          condicoes_pagamento?: string | null
+          created_at?: string
+          created_by?: string | null
+          data_emissao?: string
+          data_prevista?: string | null
+          data_recebimento?: string | null
+          deleted_at?: string | null
+          deleted_by?: string | null
+          desconto?: number
+          empresa_id?: string
+          finance_title_id?: string | null
+          id?: string
+          numero?: string
+          observacoes?: string | null
+          subtotal?: number
+          supplier_id?: string | null
+          total?: number
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "purchase_orders_finance_title_id_fkey"
+            columns: ["finance_title_id"]
+            isOneToOne: false
+            referencedRelation: "finance_titles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchase_orders_supplier_id_fkey"
+            columns: ["supplier_id"]
+            isOneToOne: false
+            referencedRelation: "suppliers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       quote_items: {
         Row: {
           created_at: string
@@ -1479,6 +1646,72 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "companies"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      stock_movements: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          custo_unitario: number | null
+          data_movimento: string
+          empresa_id: string
+          id: string
+          observacao: string | null
+          origem: string | null
+          origem_id: string | null
+          product_id: string
+          quantidade: number
+          tipo: Database["public"]["Enums"]["stock_movement_type"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          custo_unitario?: number | null
+          data_movimento?: string
+          empresa_id: string
+          id?: string
+          observacao?: string | null
+          origem?: string | null
+          origem_id?: string | null
+          product_id: string
+          quantidade: number
+          tipo: Database["public"]["Enums"]["stock_movement_type"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          custo_unitario?: number | null
+          data_movimento?: string
+          empresa_id?: string
+          id?: string
+          observacao?: string | null
+          origem?: string | null
+          origem_id?: string | null
+          product_id?: string
+          quantidade?: number
+          tipo?: Database["public"]["Enums"]["stock_movement_type"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stock_movements_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stock_movements_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "stock_balances"
+            referencedColumns: ["product_id"]
           },
         ]
       }
@@ -1959,7 +2192,25 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      stock_balances: {
+        Row: {
+          codigo: string | null
+          empresa_id: string | null
+          nome: string | null
+          product_id: string | null
+          saldo: number | null
+          unidade: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_empresa_id_fkey"
+            columns: ["empresa_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       convert_quote_to_order: { Args: { _quote_id: string }; Returns: string }
@@ -1972,6 +2223,10 @@ export type Database = {
           _obs?: string
           _valor: number
         }
+        Returns: string
+      }
+      generate_ap_from_purchase: {
+        Args: { _purchase_id: string }
         Returns: string
       }
       generate_ar_from_order: { Args: { _order_id: string }; Returns: string }
@@ -1995,6 +2250,10 @@ export type Database = {
       next_order_number: { Args: never; Returns: string }
       next_production_number: { Args: never; Returns: string }
       next_quote_number: { Args: never; Returns: string }
+      receive_purchase_order: {
+        Args: { _purchase_id: string }
+        Returns: number
+      }
       seed_default_finance_workflows: {
         Args: { _empresa: string }
         Returns: undefined
@@ -2003,11 +2262,31 @@ export type Database = {
         Args: { _empresa: string }
         Returns: string
       }
+      seed_default_purchase_workflow: {
+        Args: { _empresa: string }
+        Returns: string
+      }
       seed_default_role_permissions: {
         Args: { _empresa: string }
         Returns: undefined
       }
+      seed_extra_purchase_permissions: {
+        Args: { _empresa: string }
+        Returns: undefined
+      }
       soft_delete: { Args: { _id: string; _table: string }; Returns: undefined }
+      stock_adjust: {
+        Args: {
+          _custo_unitario?: number
+          _observacao?: string
+          _origem?: string
+          _origem_id?: string
+          _product_id: string
+          _quantidade: number
+          _tipo: Database["public"]["Enums"]["stock_movement_type"]
+        }
+        Returns: string
+      }
       touch_last_access: { Args: never; Returns: undefined }
       user_empresa_ids: { Args: never; Returns: string[] }
       workflow_available_transitions: {
@@ -2066,6 +2345,7 @@ export type Database = {
         | "cancelado"
         | "nao_enviado"
         | "enviado"
+      stock_movement_type: "entrada" | "saida" | "ajuste" | "inventario"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -2222,6 +2502,7 @@ export const Constants = {
         "nao_enviado",
         "enviado",
       ],
+      stock_movement_type: ["entrada", "saida", "ajuste", "inventario"],
     },
   },
 } as const

@@ -24,12 +24,14 @@ export type BuiltInNumberKind =
   | "quote"
   | "order"
   | "production"
+  | "purchase"
   | FinanceKind;
 
 const BUILTIN_PREFIX: Record<BuiltInNumberKind, string> = {
   quote: "ORC",
   order: "PED",
   production: "OP",
+  purchase: "COM",
   finance_receivable: "FIN-R",
   finance_payable: "FIN-P",
 };

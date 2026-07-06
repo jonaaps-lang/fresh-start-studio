@@ -24,3 +24,7 @@ export { numberingService } from "./numbering";
 export type { BuiltInNumberKind } from "./numbering";
 export { financeService } from "./finance";
 export type { TitleRow, CreateTitleInput } from "./finance";
+export { purchasesService } from "./purchases";
+export type { PurchaseRow, CreatePurchaseInput } from "./purchases";
+export { stockService } from "./stock";
+export type { StockMovementRow } from "./stock";

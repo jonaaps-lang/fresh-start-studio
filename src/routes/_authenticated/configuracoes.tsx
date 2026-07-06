@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   Building2, Workflow, ShoppingCart, Factory, Wallet, FileText,
-  Palette, UserCog, Cog, Loader2, Upload, Trash2, Save,
+  Palette, UserCog, Cog, Loader2, Upload, Trash2, Save, PackageSearch, Boxes,
 } from "lucide-react";
 
 import { AppShell, PageHeader } from "@/components/app-shell";
@@ -27,6 +27,8 @@ import {
   type InterfaceSettings,
   type UsuariosSettings,
   type SistemaSettings,
+  type ComprasSettings,
+  type EstoqueSettings,
 } from "@/domain/settings";
 
 export const Route = createFileRoute("/_authenticated/configuracoes")({
@@ -51,6 +53,8 @@ const CATEGORIES: CategoryMeta[] = [
   { key: "producao",   label: "Produção",    description: "Preparado para o módulo de produção.",        icon: Factory,   editRoles: ["admin", "gerente"] },
   { key: "financeiro", label: "Financeiro",  description: "Preparado para o módulo financeiro.",         icon: Wallet,    editRoles: ["admin", "gerente", "financeiro"] },
   { key: "documentos", label: "Documentos",  description: "Numeração, PDF e defaults de orçamento.",     icon: FileText,  editRoles: ["admin", "gerente", "financeiro"] },
+  { key: "compras",    label: "Compras",     description: "Ativação, aprovação e geração de Contas a Pagar.", icon: PackageSearch, editRoles: ["admin", "gerente", "financeiro"] },
+  { key: "estoque",    label: "Estoque",     description: "Controle opcional de saldo e movimentações.",   icon: Boxes,     editRoles: ["admin", "gerente"] },
   { key: "interface",  label: "Interface",   description: "Aparência e densidade.",                       icon: Palette,   editRoles: ["admin", "gerente", "financeiro", "vendedor", "producao"] },
   { key: "usuarios",   label: "Usuários",    description: "Regras de acesso e cadastro.",                 icon: UserCog,   editRoles: ["admin"] },
   { key: "sistema",    label: "Sistema",     description: "Ambiente, atualizações e recursos.",           icon: Cog,       editRoles: ["admin"] },
@@ -156,11 +160,51 @@ function CategoryPanel({ category, canEdit }: { category: SettingsCategory; canE
     case "producao":   return <ProducaoPanel   values={query.data as ProducaoSettings}   canEdit={canEdit} onSave={save} />;
     case "financeiro": return <FinanceiroPanel values={query.data as FinanceiroSettings} canEdit={canEdit} onSave={save} />;
     case "documentos": return <DocumentosPanel values={query.data as DocumentosSettings} canEdit={canEdit} onSave={save} />;
+    case "compras":    return <ComprasPanel    values={query.data as ComprasSettings}    canEdit={canEdit} onSave={save} />;
+    case "estoque":    return <EstoquePanel    values={query.data as EstoqueSettings}    canEdit={canEdit} onSave={save} />;
     case "interface":  return <InterfacePanel  values={query.data as InterfaceSettings}  canEdit={canEdit} onSave={save} />;
     case "usuarios":   return <UsuariosPanel   values={query.data as UsuariosSettings}   canEdit={canEdit} onSave={save} />;
     case "sistema":    return <SistemaPanel    values={query.data as SistemaSettings}    canEdit={canEdit} onSave={save} />;
   }
 }
+
+// =============================================================================
+function ComprasPanel({
+  values, canEdit, onSave,
+}: { values: ComprasSettings; canEdit: boolean; onSave: (v: Partial<ComprasSettings>) => Promise<void> }) {
+  const fields: SettingsField<ComprasSettings>[] = [
+    { name: "utiliza_compras", label: "Utiliza módulo de Compras", type: "switch", colSpan: 2 },
+    { name: "exige_aprovacao_compra", label: "Exige aprovação para emitir pedido", type: "switch", visible: (v) => v.utiliza_compras },
+    { name: "gerar_cp_automaticamente", label: "Gerar Contas a Pagar ao receber", type: "switch", visible: (v) => v.utiliza_compras },
+    { name: "parcelamento_padrao", label: "Parcelamento padrão", type: "number", min: 1, max: 48, visible: (v) => v.utiliza_compras },
+    { name: "vencimento_dias_padrao", label: "Vencimento padrão (dias)", type: "number", min: 0, max: 365, visible: (v) => v.utiliza_compras },
+  ];
+  return (
+    <SettingsSection
+      title="Compras" description="Ative o módulo e configure geração automática de Contas a Pagar."
+      fields={fields} values={values} schema={CATEGORY_SCHEMAS.compras} onSave={onSave} canEdit={canEdit}
+    />
+  );
+}
+
+function EstoquePanel({
+  values, canEdit, onSave,
+}: { values: EstoqueSettings; canEdit: boolean; onSave: (v: Partial<EstoqueSettings>) => Promise<void> }) {
+  const fields: SettingsField<EstoqueSettings>[] = [
+    { name: "utiliza_estoque", label: "Utiliza controle de estoque", type: "switch", colSpan: 2 },
+    { name: "estoque_obrigatorio", label: "Estoque obrigatório em vendas", type: "switch", visible: (v) => v.utiliza_estoque },
+    { name: "permitir_estoque_negativo", label: "Permitir saldo negativo", type: "switch", visible: (v) => v.utiliza_estoque },
+    { name: "alerta_estoque_minimo", label: "Alertar estoque mínimo", type: "switch", visible: (v) => v.utiliza_estoque },
+  ];
+  return (
+    <SettingsSection
+      title="Estoque" description="Estoque é opcional — gráficas sob demanda podem manter desativado."
+      fields={fields} values={values} schema={CATEGORY_SCHEMAS.estoque} onSave={onSave} canEdit={canEdit}
+    />
+  );
+}
+
+
 
 // =============================================================================
 // EMPRESA
